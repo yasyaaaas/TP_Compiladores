@@ -1,5 +1,4 @@
 # Interpretador Bytecode
-
 Trabalho Prático da disciplina de Compiladores. Implementação de uma máquina virtual de pilha que lê e executa programas escritos em bytecode.<br>
 Aluna: Yasmin Casseniro Viegas - 800989<br>
 Matéria: Compiladores - PUC Minas<br>
@@ -9,26 +8,26 @@ Matéria: Compiladores - PUC Minas<br>
 Na pasta do projeto, rode:
 
 ```bash
-g++ -std=c++17 -Wall -o interpreter main.cpp interpreter.cpp
+g++ -std=c++17 -Wall -o interpreter main.cpp interpreter.cpp optimizer.cpp
 ```
 
 Isso gera o executável `interpreter` (ou `interpreter.exe` no Windows).
 
 ## Como rodar
- 
+
 Primeiro copie o executável para a pasta onde estão os arquivos de teste:
- 
+
 ```bash
 cp interpreter /caminho/para/pasta/dos/testes/
 ```
- 
+
 Depois abra o terminal dentro dessa pasta.
- 
+
 **Exemplo com o in6 dos toytests:**
 ```bash
 ./interpreter in6
 ```
- 
+
 Saída esperada:
 ```
 50
@@ -40,13 +39,17 @@ cat out6
 
 ## Como o interpretador funciona
 
-O código é dividido em três arquivos:
+O código é dividido em cinco arquivos:
 
-**`main.cpp`** - lê o arquivo de bytecode linha por linha e passa para o interpretador.
+**`main.cpp`** - lê o arquivo de bytecode linha por linha e passa para o interpretador. Também detecta a flag `--optimize` para ativar o otimizador.
 
 **`interpreter.hpp`** - declaração da classe `Interpreter`: lista os atributos e métodos que existem.
 
 **`interpreter.cpp`** - implementação de tudo: o carregamento do bytecode, o loop de execução e cada instrução.
+
+**`optimizer.hpp`** - declaração da classe `Optimizer` com os métodos de otimização.
+
+**`optimizer.cpp`** - implementação das otimizações de bytecode.
 
 ### Fase 1 — load()
 
@@ -111,3 +114,65 @@ Variáveis são guardadas em um mapa `nome → valor`. `STORE x` desempilha e sa
 | `READ` | Lê um inteiro da entrada e empilha |
 | `HALT` | Para a execução |
 | `LABEL nome` | Define um label (não gera instrução) |
+
+## Otimizador de bytecode
+
+O otimizador é ativado com a flag `--optimize`:
+
+```bash
+./interpreter --optimize programa
+```
+
+Em vez de executar, imprime o bytecode com as instruções desnecessárias removidas. O resultado pode ser executado normalmente:
+
+```bash
+./interpreter --optimize programa | ./interpreter
+```
+
+Foram implementadas duas otimizações:
+
+### Otimização 1 - Constant folding
+
+Quando duas constantes são empilhadas e logo operadas aritmeticamente, o cálculo é feito em tempo de compilação e as três instruções viram uma só.
+
+```
+# antes        # depois
+PUSH 3         PUSH 7
+PUSH 4    ->
+ADD
+```
+
+Funciona para `ADD`, `SUB`, `MUL`, `DIV` e `MOD`. Divisão por zero não é otimizada (interpretador trata em runtime).
+
+### Otimização 2 - Eliminação de PUSH/POP
+
+Quando um `PUSH` é imediatamente seguido de um `POP`, o valor é empilhado e descartado sem ser usado. Os dois se cancelam e são removidos.
+
+```
+# antes        # depois
+PUSH 99        PUSH 1
+POP       ->    PRINT
+PUSH 1
+PRINT
+```
+
+As duas otimizações são aplicadas em sequência: constant folding primeiro, depois eliminação de PUSH/POP. Isso permite casos em que o folding cria um par PUSH/POP que a segunda otimização então elimina.
+
+## Testes do otimizador
+
+Os arquivos `opt1` a `opt5` na pasta do projeto são os testes das otimizações:
+
+| Arquivo | Otimização | Antes | Depois |
+|---|---|---|---|
+| `opt1` | Constant folding (ADD) | 5 linhas | 3 linhas |
+| `opt2` | Constant folding (MUL) | 5 linhas | 3 linhas |
+| `opt3` | PUSH/POP + folding (ADD) | 7 linhas | 3 linhas |
+| `opt4` | Dois pares PUSH/POP | 7 linhas | 3 linhas |
+| `opt5` | PUSH/POP antes de STORE | 7 linhas | 5 linhas |
+
+Para rodar um teste:
+
+```bash
+./interpreter --optimize opt1  # mostra o bytecode otimizado
+./interpreter --optimize opt1 | ./interpreter  # executa o resultado
+```
