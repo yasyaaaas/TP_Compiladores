@@ -4,15 +4,28 @@
 #include <vector>
 #include <string>
 #include "interpreter.hpp"
+#include "optimizer.hpp"
 
 int main(int argc, char* argv[]) {
     std::vector<std::string> lines;
+    bool optimizeMode = false;
 
-    if (argc == 2) {
+    // Detecta a flag --optimize nos argumentos
+    std::string filename = "";
+    for (int i = 1; i < argc; i++) {
+        std::string arg = argv[i];
+        if (arg == "--optimize") {
+            optimizeMode = true;
+        } else {
+            filename = arg;
+        }
+    }
+
+    if (!filename.empty()) {
         // Lê de arquivo passado como argumento
-        std::ifstream file(argv[1]);
+        std::ifstream file(filename);
         if (!file.is_open()) {
-            std::cerr << "Erro: não foi possível abrir o arquivo '" << argv[1] << "'\n";
+            std::cerr << "Erro: não foi possível abrir o arquivo '" << filename << "'\n";
             return 1;
         }
         std::string line;
@@ -27,9 +40,19 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    Interpreter interp;
-    interp.load(lines);
-    interp.run();
+    if (optimizeMode) {
+        // Modo otimizador: imprime o bytecode otimizado e encerra
+        Optimizer opt;
+        std::vector<std::string> optimized = opt.optimize(lines);
+        for (const auto& l : optimized) {
+            std::cout << l << "\n";
+        }
+    } else {
+        // Modo normal: executa o bytecode
+        Interpreter interp;
+        interp.load(lines);
+        interp.run();
+    }
 
     return 0;
 }
