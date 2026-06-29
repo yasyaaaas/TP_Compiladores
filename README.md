@@ -1,6 +1,7 @@
 # Interpretador Bytecode
-Trabalho Prático da disciplina de Compiladores. Implementação de uma máquina virtual de pilha que lê e executa programas escritos em bytecode.<br>
-Aluna: Yasmin Casseniro Viegas - 800989<br>
+Trabalho Prático da disciplina de Compiladores.<br>
+Implementação de uma máquina virtual de pilha que lê e executa programas escritos em bytecode.<br>
+Aluna: Yasmin Cassemiro Viegas - 800989<br>
 Matéria: Compiladores - PUC Minas<br>
 
 ## Como compilar
