@@ -15,10 +15,10 @@ Isso gera o executável `interpreter` (ou `interpreter.exe` no Windows).
 
 ## Como rodar
 
-Primeiro copie o executável para a pasta onde estão os arquivos de teste:
+Primeiro copie o executável para a pasta onde estão os arquivos de teste, ou somente arrastar ele para a pasta:
 
 ```bash
-cp interpreter /caminho/para/pasta/dos/testes/
+copy interpreter.exe C:\TP_Compiladores\TESTS-1
 ```
 
 Depois abra o terminal dentro dessa pasta.
@@ -32,7 +32,7 @@ Saída esperada:
 ```
 50
 ```
-Para ver a saída do professor:
+Para ver a saída espearda:
 ```
 cat out6
 ```
