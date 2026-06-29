@@ -1,0 +1,5 @@
+LABEL loop_start
+
+PUSH 1
+JMP loop_start
+HALT
