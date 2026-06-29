@@ -64,7 +64,7 @@ std::vector<std::string> Optimizer::toLines(const std::vector<Instruction>& inst
 // Otimização 1: remoção de PUSH seguido de POP
 // -----------------------------------------
 
-// Se tivermos PUSH x imediatamente seguido de POP, os dois se cancelam.
+// Se tivermos PUSH x imediatamente seguido de POP, os dois se cancelam
 // Exemplo: PUSH 5 / POP -> removidos (2 instruções viram 0)
 std::vector<Instruction> Optimizer::removePushPop(const std::vector<Instruction>& in) {
     std::vector<Instruction> out;
@@ -88,8 +88,8 @@ std::vector<Instruction> Optimizer::removePushPop(const std::vector<Instruction>
 // Otimização 2: constant folding
 // -----------------------------------------
 
-// Se tivermos PUSH a / PUSH b / OP (aritmética), calcula o resultado em tempo de
-// compilação e substitui as três instruções por um único PUSH com o resultado.
+// Se tivermos PUSH a / PUSH b / OPERAÇÃO, calcula o resultado em tempo de
+// compilação e substitui as três instruções por um único PUSH com o resultado
 // Exemplo: PUSH 3 / PUSH 4 / ADD -> PUSH 7 (3 instruções viram 1)
 // Funciona para: ADD, SUB, MUL, DIV, MOD
 std::vector<Instruction> Optimizer::constantFolding(const std::vector<Instruction>& in) {
