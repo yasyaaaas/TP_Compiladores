@@ -75,9 +75,9 @@ Se ocorrer qualquer erro em tempo de execução (divisão por zero, stack overfl
 Todas as operações acontecem em uma pilha de inteiros. Por exemplo, para somar 3 + 5:
 
 ```
-PUSH 3   → pilha: [3]
-PUSH 5   → pilha: [3, 5]
-ADD      → desempilha os dois, empilha 8 → pilha: [8]
+PUSH 3   -> pilha: [3]
+PUSH 5   -> pilha: [3, 5]
+ADD      -> desempilha os dois, empilha 8 → pilha: [8]
 ```
 
 A pilha tem limite de 10.000 valores. Se ultrapassar, o programa encerra com `# error: stack overflow`.
