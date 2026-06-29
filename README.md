@@ -84,7 +84,7 @@ A pilha tem limite de 10.000 valores. Se ultrapassar, o programa encerra com `# 
 
 ### Variáveis
 
-Variáveis são guardadas em um mapa `nome → valor`. `STORE x` desempilha e salva em `x`. `LOAD x` lê o valor de `x` e empilha.
+Variáveis são guardadas em um mapa `nome -> valor`. `STORE x` desempilha e salva em `x`. `LOAD x` lê o valor de `x` e empilha.
 
 ### Saltos e labels
 
